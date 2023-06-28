@@ -6,6 +6,6 @@
         public string ShoeCollectionName { get; set; }
         public int MerchantId { get; set; }
         public Merchant Merchant { get; set; }
-        public ICollection<Shoe> Shoes { get; set; }
+        public ICollection<Transaction> Transactions { get; set; }
     }
 }
