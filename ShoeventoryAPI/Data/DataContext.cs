@@ -13,5 +13,24 @@ namespace ShoeventoryAPI.Data
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<SoldShoe> SoldShoes { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Merchant>()
+                .HasMany(m => m.Transactions)
+                .WithOne(t => t.Merchant)
+                .HasForeignKey(t => t.MerchantId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<ShoeCollection>()
+                .HasMany(sc => sc.Transactions)
+                .WithOne(t => t.ShoeCollection)
+                .HasForeignKey(t => t.ShoeCollectionId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            // Add other entity configurations...
+
+            base.OnModelCreating(modelBuilder);
+        }
+
     }
 }
