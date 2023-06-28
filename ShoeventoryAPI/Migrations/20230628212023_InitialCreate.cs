@@ -61,12 +61,8 @@ namespace ShoeventoryAPI.Migrations
                         name: "FK_Transactions_Merchants_MerchantId",
                         column: x => x.MerchantId,
                         principalTable: "Merchants",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Transactions_ShoeCollections_ShoeCollectionId",
-                        column: x => x.ShoeCollectionId,
-                        principalTable: "ShoeCollections",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -76,13 +72,13 @@ namespace ShoeventoryAPI.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Manufacturer = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ShoeType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShoeName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ShoeSize = table.Column<int>(type: "int", nullable: false),
+                    ShoeSize = table.Column<double>(type: "float", nullable: false),
                     ShoeColor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShoeQuantity = table.Column<int>(type: "int", nullable: false),
                     ShoePrice = table.Column<double>(type: "float", nullable: false),
-                    ShoeCollectionId = table.Column<int>(type: "int", nullable: false),
-                    TransactionId = table.Column<int>(type: "int", nullable: true)
+                    ShoeCollectionId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -93,11 +89,6 @@ namespace ShoeventoryAPI.Migrations
                         principalTable: "ShoeCollections",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Shoes_Transactions_TransactionId",
-                        column: x => x.TransactionId,
-                        principalTable: "Transactions",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -114,12 +105,6 @@ namespace ShoeventoryAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SoldShoes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_SoldShoes_Shoes_ShoeId",
-                        column: x => x.ShoeId,
-                        principalTable: "Shoes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SoldShoes_Transactions_TransactionId",
                         column: x => x.TransactionId,
@@ -139,16 +124,6 @@ namespace ShoeventoryAPI.Migrations
                 column: "ShoeCollectionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shoes_TransactionId",
-                table: "Shoes",
-                column: "TransactionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SoldShoes_ShoeId",
-                table: "SoldShoes",
-                column: "ShoeId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_SoldShoes_TransactionId",
                 table: "SoldShoes",
                 column: "TransactionId");
@@ -157,27 +132,22 @@ namespace ShoeventoryAPI.Migrations
                 name: "IX_Transactions_MerchantId",
                 table: "Transactions",
                 column: "MerchantId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Transactions_ShoeCollectionId",
-                table: "Transactions",
-                column: "ShoeCollectionId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "SoldShoes");
-
-            migrationBuilder.DropTable(
                 name: "Shoes");
 
             migrationBuilder.DropTable(
-                name: "Transactions");
+                name: "SoldShoes");
 
             migrationBuilder.DropTable(
                 name: "ShoeCollections");
+
+            migrationBuilder.DropTable(
+                name: "Transactions");
 
             migrationBuilder.DropTable(
                 name: "Merchants");
