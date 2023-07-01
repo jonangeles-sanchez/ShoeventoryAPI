@@ -10,8 +10,6 @@ namespace ShoeventoryAPI.Data
         public DbSet<Merchant> Merchants { get; set; }
         public DbSet<Shoe> Shoes { get; set; }
         public DbSet<ShoeCollection> ShoeCollections { get; set; }
-        public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<SoldShoe> SoldShoes { get; set; }
 
 
     }

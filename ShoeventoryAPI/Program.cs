@@ -1,8 +1,10 @@
-using Microsoft.EntityFrameworkCore;
-using ShoeventoryAPI.Data;
+global using Microsoft.EntityFrameworkCore;
+global using ShoeventoryAPI.Data;
+using ShoeventoryAPI.Services.InventoryService;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 // Add services to the container.
 
