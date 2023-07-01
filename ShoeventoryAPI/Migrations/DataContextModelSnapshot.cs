@@ -111,54 +111,6 @@ namespace ShoeventoryAPI.Migrations
                     b.ToTable("ShoeCollections");
                 });
 
-            modelBuilder.Entity("ShoeventoryAPI.Models.SoldShoe", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ShoeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ShoeQuantity")
-                        .HasColumnType("int");
-
-                    b.Property<double>("ShoeSize")
-                        .HasColumnType("float");
-
-                    b.Property<int>("TransactionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TransactionId");
-
-                    b.ToTable("SoldShoes");
-                });
-
-            modelBuilder.Entity("ShoeventoryAPI.Models.Transaction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("MerchantId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ShoeCollectionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MerchantId");
-
-                    b.ToTable("Transactions");
-                });
-
             modelBuilder.Entity("ShoeventoryAPI.Models.Shoe", b =>
                 {
                     b.HasOne("ShoeventoryAPI.Models.ShoeCollection", "ShoeCollection")
@@ -181,43 +133,14 @@ namespace ShoeventoryAPI.Migrations
                     b.Navigation("Merchant");
                 });
 
-            modelBuilder.Entity("ShoeventoryAPI.Models.SoldShoe", b =>
-                {
-                    b.HasOne("ShoeventoryAPI.Models.Transaction", "Transaction")
-                        .WithMany("SoldShoes")
-                        .HasForeignKey("TransactionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Transaction");
-                });
-
-            modelBuilder.Entity("ShoeventoryAPI.Models.Transaction", b =>
-                {
-                    b.HasOne("ShoeventoryAPI.Models.Merchant", "Merchant")
-                        .WithMany("Transactions")
-                        .HasForeignKey("MerchantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Merchant");
-                });
-
             modelBuilder.Entity("ShoeventoryAPI.Models.Merchant", b =>
                 {
                     b.Navigation("ShoeCollections");
-
-                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("ShoeventoryAPI.Models.ShoeCollection", b =>
                 {
                     b.Navigation("Shoes");
-                });
-
-            modelBuilder.Entity("ShoeventoryAPI.Models.Transaction", b =>
-                {
-                    b.Navigation("SoldShoes");
                 });
 #pragma warning restore 612, 618
         }

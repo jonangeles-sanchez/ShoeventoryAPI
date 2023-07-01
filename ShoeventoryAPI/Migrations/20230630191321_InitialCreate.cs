@@ -46,26 +46,6 @@ namespace ShoeventoryAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Transactions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MerchantId = table.Column<int>(type: "int", nullable: false),
-                    ShoeCollectionId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Transactions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Transactions_Merchants_MerchantId",
-                        column: x => x.MerchantId,
-                        principalTable: "Merchants",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Shoes",
                 columns: table => new
                 {
@@ -91,28 +71,6 @@ namespace ShoeventoryAPI.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "SoldShoes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TransactionId = table.Column<int>(type: "int", nullable: false),
-                    ShoeSize = table.Column<double>(type: "float", nullable: false),
-                    ShoeQuantity = table.Column<int>(type: "int", nullable: false),
-                    ShoeId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SoldShoes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_SoldShoes_Transactions_TransactionId",
-                        column: x => x.TransactionId,
-                        principalTable: "Transactions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_ShoeCollections_MerchantId",
                 table: "ShoeCollections",
@@ -122,16 +80,6 @@ namespace ShoeventoryAPI.Migrations
                 name: "IX_Shoes_ShoeCollectionId",
                 table: "Shoes",
                 column: "ShoeCollectionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SoldShoes_TransactionId",
-                table: "SoldShoes",
-                column: "TransactionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Transactions_MerchantId",
-                table: "Transactions",
-                column: "MerchantId");
         }
 
         /// <inheritdoc />
@@ -141,13 +89,7 @@ namespace ShoeventoryAPI.Migrations
                 name: "Shoes");
 
             migrationBuilder.DropTable(
-                name: "SoldShoes");
-
-            migrationBuilder.DropTable(
                 name: "ShoeCollections");
-
-            migrationBuilder.DropTable(
-                name: "Transactions");
 
             migrationBuilder.DropTable(
                 name: "Merchants");
