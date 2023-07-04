@@ -4,6 +4,7 @@ using ShoeventoryAPI.DTOs;
 using System.Threading.Tasks;
 using ShoeventoryAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShoeventoryAPI.Controllers
 {
@@ -54,6 +55,7 @@ namespace ShoeventoryAPI.Controllers
 
     [ApiController]
     [Route("api/collections")]
+    [Authorize]
     public class InventoryController : ControllerBase
     {
         private readonly IInventoryService _inventoryService;
