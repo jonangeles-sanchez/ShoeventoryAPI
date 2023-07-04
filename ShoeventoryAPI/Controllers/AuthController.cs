@@ -6,6 +6,8 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.IdentityModel.JsonWebTokens;
+using System.IdentityModel.Tokens.Jwt;
+using ShoeventoryAPI.DTOs;
 
 namespace ShoeventoryAPI.Controllers
 {
@@ -23,7 +25,7 @@ namespace ShoeventoryAPI.Controllers
         }
 
         [HttpPost("register")]
-        public ActionResult<Merchant> Register(Merchant req)
+        public ActionResult<Merchant> Register(MerchantDto req)
         {
             string passwordHash
                 = BCrypt.Net.BCrypt.HashPassword(req.Password);
@@ -34,7 +36,7 @@ namespace ShoeventoryAPI.Controllers
         }
 
         [HttpPost("login")]
-        public ActionResult<Merchant> Login(Merchant req)
+        public ActionResult<Merchant> Login(MerchantDto req)
         {
             if(user.Email != req.Email)
             {
@@ -46,8 +48,32 @@ namespace ShoeventoryAPI.Controllers
                 return BadRequest("Password is incorrect.");
             }
 
-            return Ok(user);
+            string token = CreateToken(user);
+
+            return Ok(token);
             
+        }
+
+        private string CreateToken(Merchant user)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.MerchantName)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:Token"]));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken( 
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: creds);
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
+
         }
 
     }
