@@ -11,7 +11,7 @@ using ShoeventoryAPI.DTOs;
 
 namespace ShoeventoryAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/user")]
     [ApiController]
     public class AuthController : ControllerBase
     {
