@@ -25,5 +25,13 @@ namespace ShoeventoryAPI.Services.AuthService
             return merchant;
         }
 
+        public async Task<Boolean> UserExists(string email)
+        {
+            if (await _db.Merchants.AnyAsync(x => x.Email == email))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
