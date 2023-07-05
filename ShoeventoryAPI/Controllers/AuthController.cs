@@ -8,11 +8,13 @@ using System.Text;
 using Microsoft.IdentityModel.JsonWebTokens;
 using System.IdentityModel.Tokens.Jwt;
 using ShoeventoryAPI.DTOs;
+using Microsoft.AspNetCore.Cors;
 
 namespace ShoeventoryAPI.Controllers
 {
     [Route("api/user")]
     [ApiController]
+    [EnableCors("NgOrigins")]
     public class AuthController : ControllerBase
     {
         public static Merchant user = new Merchant();
