@@ -7,5 +7,6 @@ namespace ShoeventoryAPI.Services.AuthService
     {
         Task<Merchant> Register(MerchantDto merchantDto, string hashedPass);
         Task<Boolean> UserExists(string email);
+        Task<String> GetUserPassHash(string email);
     }
 }
