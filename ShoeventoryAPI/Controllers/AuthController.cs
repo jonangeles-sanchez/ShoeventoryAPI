@@ -52,12 +52,16 @@ namespace ShoeventoryAPI.Controllers
         [HttpPost("login")]
         public ActionResult<Merchant> Login(MerchantDto req)
         {
-            if(user.Email != req.Email)
+            if(!_authService.UserExists(req.Email).Result)
             {
                 return BadRequest("Email does not exist.");
             }
 
-            if(!BCrypt.Net.BCrypt.Verify(req.Password, user.Password))
+            string reqPassHash 
+                = BCrypt.Net.BCrypt.HashPassword(req.Password);
+            string userPassHash = _authService.GetUserPassHash(req.Email);
+
+            if(!BCrypt.Net.BCrypt.Verify(reqPassHash, userPassHash))
             {
                 return BadRequest("Password is incorrect.");
             }
