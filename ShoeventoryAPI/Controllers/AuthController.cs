@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using System.IdentityModel.Tokens.Jwt;
 using ShoeventoryAPI.DTOs;
 using Microsoft.AspNetCore.Cors;
+using ShoeventoryAPI.Services.AuthService;
 
 namespace ShoeventoryAPI.Controllers
 {
@@ -18,23 +19,34 @@ namespace ShoeventoryAPI.Controllers
     public class AuthController : ControllerBase
     {
         public static Merchant user = new Merchant();
+        public readonly IAuthService _authService;
         private readonly IConfiguration _configuration;
 
-        public AuthController(IConfiguration config) 
+        public AuthController(IAuthService authService, IConfiguration configuration)
         {
-            _configuration = config;
-            
+            _authService = authService;
+            _configuration = configuration;
         }
 
         [HttpPost("register")]
-        public ActionResult<Merchant> Register(MerchantDto req)
+        public async Task<ActionResult<Merchant>> Register(MerchantDto req)
         {
+            bool userExists = _authService.UserExists(req.Email).Result;
+            if(userExists)
+            {
+                return BadRequest("Email already exists.");
+            }
             string passwordHash
                 = BCrypt.Net.BCrypt.HashPassword(req.Password);
             user.MerchantName = req.MerchantName;
             user.Password = passwordHash;
             user.Email = req.Email;
-            return Ok(user);
+            var newMerchant = await _authService.Register(req, passwordHash);
+           if(newMerchant is null)
+            {
+                return BadRequest("Error registering user.");
+            }
+            return Ok(newMerchant);
         }
 
         [HttpPost("login")]
