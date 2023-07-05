@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using ShoeventoryAPI.DTOs;
 using Microsoft.AspNetCore.Cors;
 using ShoeventoryAPI.Services.AuthService;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace ShoeventoryAPI.Controllers
 {
@@ -50,33 +51,36 @@ namespace ShoeventoryAPI.Controllers
         }
 
         [HttpPost("login")]
-        public ActionResult<Merchant> Login(MerchantDto req)
+        public async Task<ActionResult<object>> Login(MerchantDto req)
         {
-            if(!_authService.UserExists(req.Email).Result)
+
+            bool exists = await _authService.UserExists(req.Email);
+            if(!exists)
             {
                 return BadRequest("Email does not exist.");
             }
 
-            string reqPassHash 
-                = BCrypt.Net.BCrypt.HashPassword(req.Password);
-            string userPassHash = _authService.GetUserPassHash(req.Email);
+            string userPassHash = await _authService.GetUserPassHash(req.Email);
 
-            if(!BCrypt.Net.BCrypt.Verify(reqPassHash, userPassHash))
+            if(!BCrypt.Net.BCrypt.Verify(req.Password, userPassHash))
             {
                 return BadRequest("Password is incorrect.");
             }
 
-            string token = CreateToken(user);
+            string token = await CreateToken(req);
 
-            return Ok(token);
+            // Combine the token with the user's email
+            return Ok(new {Token = token, Email = req.Email});
             
         }
 
-        private string CreateToken(Merchant user)
+        private async Task<string> CreateToken(MerchantDto user)
         {
+
+            string name = await _authService.GetUserName(user.Email); 
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.MerchantName)
+                new Claim(ClaimTypes.Name, name)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:Token"]));
