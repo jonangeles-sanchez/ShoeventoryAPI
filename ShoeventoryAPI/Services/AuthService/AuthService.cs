@@ -40,5 +40,25 @@ namespace ShoeventoryAPI.Services.AuthService
             }
             return false;
         }
+
+        public async Task<string> GetUserPassHash(string email)
+        {
+            var merchant = await _db.Merchants.FirstOrDefaultAsync(x => x.Email == email);
+            if (merchant is null)
+            {
+                return null;
+            }
+            return merchant.Password;
+        }
+
+        public async Task<string> GetUserName(string email)
+        {
+            var merchant = await _db.Merchants.FirstOrDefaultAsync(x => x.Email == email);
+            if (merchant is null)
+            {
+                return null;
+            }
+            return merchant.MerchantName;
+        }
     }
 }
