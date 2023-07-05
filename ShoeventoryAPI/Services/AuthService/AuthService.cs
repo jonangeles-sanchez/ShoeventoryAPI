@@ -12,16 +12,23 @@ namespace ShoeventoryAPI.Services.AuthService
             _db = db;
         }
 
-        public async Task<Merchant> Register(MerchantDto merchantDto)
+        public async Task<Merchant> Register(MerchantDto merchantDto, string hashedPass)
         {
             var merchant = new Merchant
             {
                 MerchantName = merchantDto.MerchantName,
-                Password = merchantDto.Password,
+                Password = hashedPass,
                 Email = merchantDto.Email
             };
-            _db.Merchants.Add(merchant);
-            await _db.SaveChangesAsync();
+            try
+            {
+                _db.Merchants.Add(merchant);
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
             return merchant;
         }
 
