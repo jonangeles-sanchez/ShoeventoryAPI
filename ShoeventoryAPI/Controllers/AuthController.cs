@@ -74,6 +74,11 @@ namespace ShoeventoryAPI.Controllers
             
         }
 
+        private async Task<Merchant> GetMe(string email)
+        {
+            return await _authService.GetMe(email);
+        }
+
         private async Task<string> CreateToken(MerchantDto user)
         {
 
