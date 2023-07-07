@@ -87,6 +87,17 @@ namespace ShoeventoryAPI.Controllers
             return collection;
         }
 
+        [HttpGet("{merchantId}/merchant")]
+        public async Task<ActionResult<List<ShoeCollection>>> GetAllMerchantCollections(int merchantId)
+        {
+            var collections = await _inventoryService.GetAllMerchantCollections(merchantId);
+            if (collections is null)
+            {
+                return NotFound("Merchant was not found.");
+            }
+            return collections;
+        }
+
         [HttpPut("{collectionId}")]
         public async Task<ActionResult<ShoeCollection>> EditShoeCollection(int collectionId, CollectionDto collectionDto)
         {
