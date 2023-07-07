@@ -88,6 +88,23 @@ namespace ShoeventoryAPI.Services.InventoryService
             return collection;
         }
 
+        public async Task<List<ShoeCollection>> GetAllMerchantCollections(int merchantId)
+        {
+            /*
+            var collections = await _context.ShoeCollections
+                .Where(c => c.MerchantId == merchantId)
+                .ToListAsync();
+            */
+            var collections = await _context.Merchants
+                .Where(m => m.Id == merchantId)
+                .SelectMany(m => m.ShoeCollections)
+                .Include(c => c.Shoes)
+                .ToListAsync();
+
+            return collections;
+
+        }
+
         public async Task<Shoe> GetShoeFromCollection(int collectionId, int shoeId)
         {
             var shoe = await _context.Shoes
