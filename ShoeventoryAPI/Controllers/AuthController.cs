@@ -70,8 +70,16 @@ namespace ShoeventoryAPI.Controllers
             string token = await CreateToken(req);
 
             // Combine the token with the user's email
-            return Ok(new {Token = token, Email = req.Email});
+           // return Ok(new {Token = token, Email = req.Email});
+
+            var user = await GetMe(req.Email);
+            return Ok(new {Token = token, Email = req.Email, MerchantName = user.MerchantName, MerchantId = user.Id});
             
+        }
+
+        private async Task<Merchant> GetMe(string email)
+        {
+            return await _authService.GetMe(email);
         }
 
         private async Task<string> CreateToken(MerchantDto user)
