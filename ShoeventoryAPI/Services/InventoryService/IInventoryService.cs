@@ -9,6 +9,7 @@ namespace ShoeventoryAPI.Services.InventoryService
         Task<Merchant> AddNewMerchant(MerchantDto merchantDto);
         Task<Merchant> EditMerchant(int merchantId, MerchantDto merchantDto);
         Task<ShoeCollection> AddNewCollection(CollectionDto collection);
+        Task<List<ShoeCollection>> GetAllMerchantCollections(int merchantId);
         Task<ShoeCollection> GetCollection(int collectionId);
         Task<ShoeCollection> EditShoeCollection(int collectionId, CollectionDto collectionDto);
         Task<Shoe> AddShoeToCollection(int collectionId, ShoeDto shoeDto);
